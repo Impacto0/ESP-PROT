@@ -1,0 +1,12 @@
+{
+    "name": "ESP-PROT",
+    "version": "0.1.0",
+    "description": "Customowy protokół komunikacji między mikrokontrolerami ESP",
+    "repository":
+    {
+      "type": "git",
+      "url": "https://github.com/Impacto0/ESP-PROT.git"
+    },
+    "frameworks": "arduino",
+    "platforms": ["espressif8266", "espressif32", "atmelavr", "atmelsam", "atmelmegaavr"]
+  }

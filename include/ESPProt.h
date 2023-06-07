@@ -11,7 +11,7 @@ class ESPProt
 {
 public:
     // metoda Init() jest wywoływana w setup() i inicjalizuje komunikację (używana po stronie klienta i serwera)
-    void Init();
+    void Init(bool isServer);
 
     // metoda RequestSensorData() używana jest po stronie serwera
     void RequestSensorData(int type, int sensorID);

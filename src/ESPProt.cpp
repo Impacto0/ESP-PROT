@@ -9,8 +9,6 @@
 
 esp_now_peer_info_t _peerInfo;
 
-void OnDataRecvCallback(const uint8_t *mac, const uint8_t *data, int len);
-
 void ESPProt::Init(bool isServer) {
     IsServer = isServer;
 

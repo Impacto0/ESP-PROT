@@ -62,22 +62,22 @@ void ESPProt::Init(bool isServer) {
     }
 }
 
-void ESPProt::RequestSensorData(int clientID) {
+void ESPProt::Request(int clientID, int data) {
     EPM message;
 
     message.ClientID = clientID;
     message.Type = 0;
-    message.Data = 0;
+    message.Data = data;
 
     esp_now_send(NULL, (uint8_t *)&message, sizeof(EPM));
 }
 
-void ESPProt::SendSensorData(int clientID, int data) {
+void ESPProt::Send(int clientID, int data) {
     EPM message;
 
     message.ClientID = clientID;
     message.Type = 1;
     message.Data = data;
 
-    esp_now_send(server, (uint8_t *)&message, sizeof(EPM));
+    esp_now_send(NULL, (uint8_t *)&message, sizeof(EPM));
 }

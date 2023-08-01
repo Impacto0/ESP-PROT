@@ -14,13 +14,9 @@ class ESPProt {
     // metoda inicjalizuje WiFi i ESP-NOW
     void Init(bool isServer);
 
-    // metoda RequestSensorData() używana jest po stronie serwera
-    // wysyła zapytanie o dane do klienta
-    void RequestSensorData(int clientID);
+    void Request(int clientID, int data);
 
-    // metoda SendSensorData() używana jest po stronie klienta
-    // wysyła dane do serwera
-    void SendSensorData(int clientID, int data);
+    void Send(int clientID, int data);
 
     // metoda AddClient() używana jest po stronie serwera
     // dodaje odbiorcę, do którego będą wysyłane dane

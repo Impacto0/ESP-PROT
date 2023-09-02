@@ -1,10 +1,18 @@
 #include <Arduino.h>
 
+#ifdef ESP32
+#include <WiFi.h>
+#include <esp_now.h>
+#else
+#include <ESP8266WiFi.h>
+#include <espnow.h>
+#endif
+
 // EPM - ESP Protocol Message
 typedef struct EPM {
-    unsigned int ClientID : 4;  // 4 bity na ID klienta (0-15)
-    unsigned int Type : 1;      // 1 bit na typ (0 - zapytanie, 1 - odpowiedź)
-    unsigned int Data : 24;     // 24 bity na dane (0-16777215)
+    unsigned int clientID : 4;  // 4 bity na ID klienta (0-15)
+    unsigned int type : 1;      // 1 bit na typ (0 - zapytanie, 1 - odpowiedź)
+    unsigned int data : 24;     // 24 bity na dane (0-16777215)
 } EPM;
 
 class ESPProt {
@@ -12,44 +20,50 @@ class ESPProt {
     // metoda Init() jest wywoływana w setup() i inicjalizuje komunikację (używana po stronie klienta i serwera)
     // isServer - czy urządzenie jest serwerem (true) czy klientem (false)
     // metoda inicjalizuje WiFi i ESP-NOW
-    void Init(bool isServer);
+    void init(bool isServer);
 
-    void Request(int clientID, int data);
+    void request(int clientID, int data);
 
-    void Send(int clientID, int data);
+    void send(int clientID, int data);
 
     // metoda AddClient() używana jest po stronie serwera
     // dodaje odbiorcę, do którego będą wysyłane dane
-    void AddClient(uint8_t* mac);
+    void addClient(uint8_t* mac);
 
     // metoda SetServer() używana jest po stronie klienta
     // ustawia nadawce danych
-    void SetServer(uint8_t* mac);
+    void setServer(uint8_t* mac);
 
-    void InitCallback() {
-        esp_now_register_recv_cb(OnDataRecvCallback);
+    void initCallback() {
+        esp_now_register_recv_cb(onDataRecvCallback);
     }
 
-    // 1 argument is void function that has an arugment of type EPM
-    static void OnDataRecv(void (*callback)(EPM)) {
-        dataCallback = callback;
+    static void onDataRecv(void (*callback)(EPM)) {
+        // dataCallback = callback;
     }
 
-    bool IsServer = false;
+    bool isServer = false;
 
    private:
     typedef void (*callback_t)(EPM);
 
     uint8_t clients[10][6];
-    uint8_t server[6];
 
     static callback_t dataCallback;
 
     int clientCount = 0;
 
-    static void OnDataRecvCallback(const uint8_t* mac, const uint8_t* data, int len) {
+#ifdef ESP32
+    static void onDataRecvCallback(const uint8_t* mac, const uint8_t* data, int len) {
         EPM message;
         memcpy(&message, data, sizeof(message));
-        dataCallback(message);
+        // dataCallback(message);
     }
+#else
+    static void onDataRecvCallback(uint8_t* mac, uint8_t* data, uint8_t len) {
+        EPM message;
+        memcpy(&message, data, sizeof(message));
+        // dataCallback(message);
+    }
+#endif
 };
